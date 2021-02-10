@@ -57,7 +57,7 @@ dim(dt)
 ```
 
 
-We have 3 numeric predictors and rest are character. Target is numeric as well. This will be converted to factor.
+We have 3 numeric predictors and rest are categorical. Target is numeric as well. This will be converted to factor.
 
 
 ```r
@@ -442,7 +442,7 @@ This leaves with still 28 missing ***major_discipline***. Those missing values w
 dt_clean <- dt %>% drop_na(company_size, company_type, gender)
 ```
 
-After dropping missing values from 3 predictors with very high missing %, we are left with 9046 samples.
+After dropping missing values from 3 predictors with very high missing %, we are left with 9791 samples.
 
 
 ```r
@@ -649,7 +649,8 @@ dt_clean %>%
 
 ![](final_project_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
-Bar plots below show that predictor ***city*** has 117 levels. 
+Bar plots of categorial predictors show show many predictors with imbalanced levels. ***major_discipline*** predictor has almost 8000 samples as STEM out of total 9791 samples. There is similar imbalance in ***gender***, ***relevant_experience***, ***company_type*** and few other predictors.
+We should handle this by either removing near zero variance (nzv) predictors or lumping the less frequent levels into one single level
 
 ```r
 # Character  
@@ -665,154 +666,34 @@ dt_clean %>%
 
 <img src="final_project_files/figure-html/unnamed-chunk-18-1.png" width="120%" />
 
-
+We also notice that ***city*** predictor has 117 different levels. But most of those levels occur less frequently. Those low frequency levels should be grouped into one level.
 
 ```r
-dt_clean %>% distinct(city)
+dt_clean %>% distinct(city) %>% count()
 ```
 
 ```
-## # A tibble: 117 x 1
-##    city    
-##    <chr>   
-##  1 city_40 
-##  2 city_162
-##  3 city_160
-##  4 city_46 
-##  5 city_103
-##  6 city_61 
-##  7 city_114
-##  8 city_159
-##  9 city_100
-## 10 city_21 
-## # ... with 107 more rows
+## # A tibble: 1 x 1
+##       n
+##   <int>
+## 1   117
 ```
 
 ```r
-dt_clean %>% tabyl(city)
+dt_clean %>% tabyl(city) %>% head()
 ```
 
 ```
-##      city    n      percent
-##    city_1   15 0.0015320192
-##   city_10   58 0.0059238076
-##  city_100  111 0.0113369421
-##  city_101   29 0.0029619038
-##  city_102  140 0.0142988459
-##  city_103 2514 0.2567664181
-##  city_104  167 0.0170564804
-##  city_105   42 0.0042896538
-##  city_106    3 0.0003064038
-##  city_107    1 0.0001021346
-##  city_109    1 0.0001021346
-##   city_11   98 0.0100091921
-##  city_111    1 0.0001021346
-##  city_114  806 0.0823204984
-##  city_115   22 0.0022469615
-##  city_116   57 0.0058216730
-##  city_117    4 0.0004085385
-##  city_118   12 0.0012256154
-##   city_12    6 0.0006128077
-##  city_120    4 0.0004085385
-##  city_121    1 0.0001021346
-##  city_123   32 0.0032683076
-##  city_126    4 0.0004085385
-##  city_127    1 0.0001021346
-##  city_128   35 0.0035747115
-##  city_129    1 0.0001021346
-##   city_13   23 0.0023490961
-##  city_131    5 0.0005106731
-##  city_133    6 0.0006128077
-##  city_134    7 0.0007149423
-##  city_136  300 0.0306403840
-##  city_138   68 0.0069451537
-##  city_139    1 0.0001021346
-##   city_14   11 0.0011234807
-##  city_141   11 0.0011234807
-##  city_142   20 0.0020426923
-##  city_143   18 0.0018384230
-##  city_144   13 0.0013277500
-##  city_145   14 0.0014298846
-##  city_146    3 0.0003064038
-##  city_149   36 0.0036768461
-##  city_150   27 0.0027576346
-##  city_152   17 0.0017362884
-##  city_155    7 0.0007149423
-##  city_157    8 0.0008170769
-##  city_158   20 0.0020426923
-##  city_159   45 0.0045960576
-##   city_16  892 0.0911040752
-##  city_160  431 0.0440200184
-##  city_162   41 0.0041875192
-##  city_165   39 0.0039832499
-##  city_166    2 0.0002042692
-##  city_167    7 0.0007149423
-##  city_173   82 0.0083750383
-##  city_175    5 0.0005106731
-##  city_176   10 0.0010213461
-##  city_179    3 0.0003064038
-##   city_18    3 0.0003064038
-##   city_19   34 0.0034725769
-##    city_2    3 0.0003064038
-##   city_20    8 0.0008170769
-##   city_21 1155 0.1179654785
-##   city_23  115 0.0117454805
-##   city_24   21 0.0021448269
-##   city_25    1 0.0001021346
-##   city_26   12 0.0012256154
-##   city_27   23 0.0023490961
-##   city_28  123 0.0125625575
-##   city_30   11 0.0011234807
-##   city_33    4 0.0004085385
-##   city_36  104 0.0106219998
-##   city_37    3 0.0003064038
-##   city_39    6 0.0006128077
-##   city_40   34 0.0034725769
-##   city_41   43 0.0043917884
-##   city_42    3 0.0003064038
-##   city_43    4 0.0004085385
-##   city_44    5 0.0005106731
-##   city_45   62 0.0063323460
-##   city_46   61 0.0062302114
-##   city_48    2 0.0002042692
-##   city_50   68 0.0069451537
-##   city_53   15 0.0015320192
-##   city_54    8 0.0008170769
-##   city_55    5 0.0005106731
-##   city_57   49 0.0050045961
-##   city_59    5 0.0005106731
-##   city_61  117 0.0119497498
-##   city_62    1 0.0001021346
-##   city_64   71 0.0072515576
-##   city_65   91 0.0092942498
-##   city_67  207 0.0211418650
-##   city_69    6 0.0006128077
-##    city_7    9 0.0009192115
-##   city_70   11 0.0011234807
-##   city_71  140 0.0142988459
-##   city_72   10 0.0010213461
-##   city_73  121 0.0123582882
-##   city_74   47 0.0048003268
-##   city_75  176 0.0179756920
-##   city_76   29 0.0029619038
-##   city_77   20 0.0020426923
-##   city_78    9 0.0009192115
-##   city_80    7 0.0007149423
-##   city_81    5 0.0005106731
-##   city_82    4 0.0004085385
-##   city_83   81 0.0082729037
-##   city_84   15 0.0015320192
-##   city_89   32 0.0032683076
-##    city_9    8 0.0008170769
-##   city_90   56 0.0057195384
-##   city_91   11 0.0011234807
-##   city_93   15 0.0015320192
-##   city_94   10 0.0010213461
-##   city_97   56 0.0057195384
-##   city_98   46 0.0046981922
-##   city_99   53 0.0054131345
+##      city    n     percent
+##    city_1   15 0.001532019
+##   city_10   58 0.005923808
+##  city_100  111 0.011336942
+##  city_101   29 0.002961904
+##  city_102  140 0.014298846
+##  city_103 2514 0.256766418
 ```
 
+# TO DO
 
 # Data split 
 
