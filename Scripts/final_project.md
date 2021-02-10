@@ -414,6 +414,7 @@ dt %>% tabyl(education_level, major_discipline) %>%
   </tr>
 </tbody>
 </table>
+
 We see that predictor ***major_discipline*** is missing 2813 samples. When tabulating it against education level, we seen an interesting pattern.
 Vast majority of missing ***major_discipline*** have education level *High School* and *Primary School*. This makes sense, since high school and primary school don't have major discipline. These missing values will be encoded as *Not Applicable*.
 The frequency table also shows that 460 samples are missing both ***education_level*** and ***major_discipline***. Given that all other eductaion levels except community college are represented in the data and this group has missing major, it is reasonable to expect that this missing ***education_level*** is commuity college associate degree. This will be encoded as *Associate* and its ***major_discipline*** will be encoded as *Not Applicable*.
