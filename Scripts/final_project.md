@@ -33,12 +33,10 @@ dt <- read_csv(here("data", "aug_train.csv"))
 
 ### Initial look at the data
 
-We have 3 numeric predictors and rest are character. Target is numeric as well. This will be converted to factor.
-
+There are 13 predictors and 1 target variable. Total sample size is 19158.
 
 ```r
 #predictors and outcome name
-
 names(dt)
 ```
 
@@ -57,6 +55,10 @@ dim(dt)
 ```
 ## [1] 19158    14
 ```
+
+
+We have 3 numeric predictors and rest are character. Target is numeric as well. This will be converted to factor.
+
 
 ```r
 #check data type
@@ -87,7 +89,7 @@ dt %>% map_df(~data.frame(class = class(.x)),
 dt <- dt %>% mutate(target = factor(target))
 ```
 
-Here we see that the outcome class is imbalanced. Majority class ***0*** is 75% of the outcome and minority class ***1*** is only 25%. We will need to use techniques like upsampling, downsampling or SMOTE.
+Below we see that the outcome class is imbalanced. Majority class ***0*** is 75% of the outcome and minority class ***1*** is only 25%. We will need to use techniques like upsampling, downsampling or SMOTE.
 
 
 ```r
@@ -440,10 +442,11 @@ This leaves with still 28 missing ***major_discipline***. Those missing values w
 dt_clean <- dt %>% drop_na(company_size, company_type, gender)
 ```
 
-After dropping missing values from 3 predictors with very high missing %, we are left with 9046 samples. Remaining missing values are shown below.
+After dropping missing values from 3 predictors with very high missing %, we are left with 9046 samples.
 
 
 ```r
+#original data 
 dim(dt)
 ```
 
@@ -452,6 +455,7 @@ dim(dt)
 ```
 
 ```r
+# after cleaning
 dim(dt_clean)
 ```
 
@@ -459,8 +463,10 @@ dim(dt_clean)
 ## [1] 9791   14
 ```
 
+Remaining missing values are shown below.
+
 ```r
-#check for null values
+#check for remaining null values
 dt_clean %>% map_df(
   ~tibble(
     total = sum(is.na(.x)),
@@ -641,9 +647,9 @@ dt_clean %>%
   facet_wrap(.~name, scales = "free") 
 ```
 
-![](final_project_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](final_project_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
-
+Bar plots below show that predictor ***city*** has 117 levels. 
 
 ```r
 # Character  
@@ -657,7 +663,7 @@ dt_clean %>%
   theme(axis.text.x=element_text(angle = 45, hjust=1))
 ```
 
-<img src="final_project_files/figure-html/unnamed-chunk-16-1.png" width="120%" />
+<img src="final_project_files/figure-html/unnamed-chunk-18-1.png" width="120%" />
 
 
 
