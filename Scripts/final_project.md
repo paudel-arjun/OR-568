@@ -427,6 +427,7 @@ The frequency table also shows that 460 samples are missing both ***education_le
 ```r
 dt_clean <- dt %>% 
   replace_na(list(education_level = "Associate"))
+
 dt_clean <- dt_clean %>% 
   mutate(
     major_discipline = case_when(
@@ -435,11 +436,11 @@ dt_clean <- dt_clean %>%
     )
          )
 ```
-This leaves with still 28 missing ***major_discipline***. Those missing values will be imputed during model building.
+
 
 
 ```r
-dt_clean <- dt %>% drop_na(company_size, company_type, gender)
+dt_clean <- dt_clean %>% drop_na(company_size, company_type, gender)
 ```
 
 After dropping missing values from 3 predictors with very high missing %, we are left with 9791 samples.
@@ -486,16 +487,6 @@ dt_clean %>% map_df(
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> major_discipline </td>
-   <td style="text-align:right;"> 745 </td>
-   <td style="text-align:right;"> 7.6090287 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> education_level </td>
-   <td style="text-align:right;"> 79 </td>
-   <td style="text-align:right;"> 0.8068634 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> enrolled_university </td>
    <td style="text-align:right;"> 72 </td>
    <td style="text-align:right;"> 0.7353692 </td>
@@ -504,6 +495,11 @@ dt_clean %>% map_df(
    <td style="text-align:left;"> last_new_job </td>
    <td style="text-align:right;"> 27 </td>
    <td style="text-align:right;"> 0.2757635 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> major_discipline </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 0.0817077 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> experience </td>
@@ -532,6 +528,11 @@ dt_clean %>% map_df(
   </tr>
   <tr>
    <td style="text-align:left;"> relevent_experience </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.0000000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> education_level </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0.0000000 </td>
   </tr>
@@ -589,13 +590,13 @@ dt_clean %>%
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;"> 8.9% (726) </td>
-   <td style="text-align:left;"> 91.1% (7472) </td>
+   <td style="text-align:left;"> 1.0% (80) </td>
+   <td style="text-align:left;"> 99.0% (8118) </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 6.9% (110) </td>
-   <td style="text-align:left;"> 93.1% (1483) </td>
+   <td style="text-align:left;"> 1.9% (30) </td>
+   <td style="text-align:left;"> 98.1% (1563) </td>
   </tr>
 </tbody>
 </table>
