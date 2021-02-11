@@ -659,8 +659,9 @@ We should handle this by either removing near zero variance (nzv) predictors or 
 dt_clean %>% 
   select(where(is.character)) %>% 
   pivot_longer(everything()) %>% 
-  ggplot(aes(value))+
-  geom_bar()+
+  group_by(name, value) %>% summarize(count = n()) %>% 
+  ggplot(aes(tidytext::reorder_within(value,count, name), count))+
+  geom_col()+
   facet_wrap(.~name, scales = "free",ncol = 3)+
   theme(axis.text.x=element_text(angle = 45, hjust=1))
 ```
